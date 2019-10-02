@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1035305724074",
+    "firebase_url": "https://travel-memo-7bfc7.firebaseio.com",
+    "project_id": "travel-memo-7bfc7",
+    "storage_bucket": "travel-memo-7bfc7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1035305724074:android:be92e92db66a9ac89108d3",
+        "android_client_info": {
+          "package_name": "com.example.travel_memo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1035305724074-kghocoto0mqmssr8qeat3obp3lq6hgio.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfCYxzamtlJri9FN9Fvyx16Ymr0h_8zpA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1035305724074-kghocoto0mqmssr8qeat3obp3lq6hgio.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
