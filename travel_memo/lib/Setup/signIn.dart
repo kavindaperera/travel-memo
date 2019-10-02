@@ -58,10 +58,12 @@ class _LoginPageState extends State<LoginPage> {
   void validateandSubmit() async {
     if(validateandSave()){
       try{
-      AuthResult result = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email,password: _password)) ;
+      AuthResult result = (await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _email.trim(),
+          password: _password.toString().trim())) ;
       FirebaseUser user = result.user;
       print('Signed in : ${user}');
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home(user: user)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
       }
       catch (e){
         _showDialog("Invalid","Your Email/Password is incorrect");

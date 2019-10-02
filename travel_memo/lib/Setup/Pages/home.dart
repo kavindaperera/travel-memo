@@ -4,7 +4,6 @@ import 'package:gender_selector/gender_selector.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:travel_memo/Setup/Pages/userForm.dart';
 import 'package:travel_memo/Setup/signIn.dart';
-
 import 'constants.dart';
 
 class Home extends StatefulWidget {
@@ -20,8 +19,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
+
+
+  Future<String> getId() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    print (user.uid);
+    return (user.uid);
+  }
+
+    @override
   Widget build(BuildContext context) {
+    getId();
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(
@@ -50,9 +58,10 @@ class _HomeState extends State<Home> {
   void choiceAction(String choice){
     print('Working');
     if (choice == Constants.Settings){
-      print('Settings');
+      Navigator.push(context, MaterialPageRoute(builder: (context) => UserForm()),
+      );
     }
-    else if (choice == Constants.Edit_Profile){
+    else if (choice == Constants.Profile){
       Navigator.push(context, MaterialPageRoute(builder: (context) => UserForm()),
       );
     }
