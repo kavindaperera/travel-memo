@@ -1,20 +1,17 @@
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'signUp.dart';
+
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-
-
-class _LoginPageState extends State<LoginPage> {
-  String _email, _password;
+class _SignUpPageState extends State<SignUpPage> {
+   String _email, _password ,_passwordConfirm;
   final  formKey = GlobalKey<FormState>();
-
-
+  var passKey = GlobalKey<FormFieldState>();
   bool validateandSave(){
     final form = formKey.currentState;
     if(form.validate()){
@@ -27,24 +24,22 @@ class _LoginPageState extends State<LoginPage> {
       return false;
     }
 }
-  void validateandSubmit() async {
+  void createAnAccount() async{
     if(validateandSave()){
       try{
-      AuthResult user = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email,password: _password)) ;
-      print('Signed in : ${user}');
+      AuthResult user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email,password: _password)) ;
+      print('Created Account as : ${user}');
       }
       catch (e){
       print('Error: {$e}');
     }
     }
-    
   }
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign in'),
+        title: Text('Sign Up'),
       ),
       body: new Container(
         padding: EdgeInsets.all(16.0),
@@ -64,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               TextFormField(
+                key: passKey,
                 validator: (input){
                   if(input.length < 6){
                     return 'Please provide a password with atleast 6 characters';
@@ -75,27 +71,38 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 obscureText: true,
               ),
+              TextFormField(
+                onSaved:(input) => _passwordConfirm= input,
+                validator: (input){
+                  var password = passKey.currentState.value;
+                  return (input == password) ? null : "Confirm Password should match password";
+                } ,
+                
+                decoration: InputDecoration(
+                    labelText: 'Confirm Password'
+                ),
+                obscureText: true,
+              ),
               RaisedButton(
-                onPressed: validateandSubmit,
-                child: Text('Sign In'),
+                  
+                //onPressed: ,
+                child: Text('Sign Up'),
+                onPressed:createAnAccount,
+                
             ),
               FlatButton(
-                child: Text('Create an Account'),
+                child: Text('Already have an Account? Sign In'),
                 onPressed:(){
-                  Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),
-                    );
+                  Navigator.pop(context);
                 } 
               )
           ],
         ),
       ),
-    ),
-  );
+      ),
+    );
   }
 
-  List<Widget> buildInputs(){
 
-  }
 }
+
