@@ -14,7 +14,32 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String _email, _password;
   final  formKey = GlobalKey<FormState>();
-
+  TextEditingController _controllerEmail = new TextEditingController();
+  TextEditingController _controllerPass = new TextEditingController();
+  void _showDialog(String messageTitle,String message) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text(messageTitle),
+          content: new Text(message),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                LoginPage();
+              },
+            ),
+            
+          ],
+        );
+      },
+    );
+  }
 
   bool validateandSave(){
     final form = formKey.currentState;
@@ -25,9 +50,11 @@ class _LoginPageState extends State<LoginPage> {
     }
     else{
       print('Form is invalid');
+      
       return false;
     }
 }
+
   void validateandSubmit() async {
     if(validateandSave()){
       try{
@@ -37,6 +64,9 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home(user: user)));
       }
       catch (e){
+        _showDialog("Invalid","Your Email/Password is incorrect");
+        _controllerEmail.clear();
+        _controllerPass.clear();
       print('Error: {$e}');
     }
     }
@@ -55,7 +85,8 @@ class _LoginPageState extends State<LoginPage> {
           key: formKey,
           child: Column(
             children: <Widget>[
-              TextFormField(
+              new TextFormField(
+                controller: _controllerEmail,
                 validator: (input){
                   if(input.isEmpty){
                     return 'Please type an email';
@@ -66,7 +97,8 @@ class _LoginPageState extends State<LoginPage> {
                   labelText: 'Email'
                 ),
               ),
-              TextFormField(
+              new TextFormField(
+                controller: _controllerPass,
                 validator: (input){
                   if(input.length < 6){
                     return 'Please provide a password with atleast 6 characters';

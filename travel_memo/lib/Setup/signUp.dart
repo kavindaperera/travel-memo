@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 
 import 'Pages/home.dart';
@@ -11,8 +10,12 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-   String _email, _password ,_passwordConfirm;
+  String _email, _password ,_passwordConfirm;
   final  formKey = GlobalKey<FormState>();
+  TextEditingController _controllerEmail = new TextEditingController();
+  TextEditingController _controllerPass = new TextEditingController();
+  TextEditingController _controllerConfPass = new TextEditingController();
+
   var passKey = GlobalKey<FormFieldState>();
   bool validateandSave(){
     final form = formKey.currentState;
@@ -26,6 +29,34 @@ class _SignUpPageState extends State<SignUpPage> {
       return false;
     }
 }
+
+  void _showDialog(String messageTitle,String message) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text(messageTitle),
+          content: new Text(message),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+          
+            new FlatButton(
+              child: new Text("Continue"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                ///Navigator.pop(context);
+                /////////////////////////////////////////
+                ///navigate to the home screen ******
+                ///funciton call here
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   void createAnAccount() async{
     if(validateandSave()){
       try{
@@ -33,12 +64,16 @@ class _SignUpPageState extends State<SignUpPage> {
       FirebaseUser user = result.user;
       print('Created Account as : ${user}');
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home(user: user)));
-      }
-      catch (e){
+      _showDialog("Successful","You have Successfully Registered!");
+      } catch (e){
       print('Error: {$e}');
+      
     }
     }
   }
+//show messages when done
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,17 +87,22 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Column(
             children: <Widget>[
               TextFormField(
+                controller: _controllerEmail,
                 validator: (input){
                   if(input.isEmpty){
                     return 'Please type an email';
                   }
+                  if(!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(input)){
+                    return "Invalid Email";
+                  }
                 } ,
                 onSaved:(input) => _email = input,
                 decoration: InputDecoration(
-                  labelText: 'Email'
+                  labelText: 'Enter Your Email'
                 ),
               ),
               TextFormField(
+                controller: _controllerPass,
                 key: passKey,
                 validator: (input){
                   if(input.length < 6){
@@ -71,11 +111,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 } ,
                 onSaved:(input) => _password= input,
                 decoration: InputDecoration(
-                    labelText: 'Password'
+                    labelText: 'Enter Your Password'
                 ),
                 obscureText: true,
               ),
               TextFormField(
+                controller: _controllerConfPass,
                 onSaved:(input) => _passwordConfirm= input,
                 validator: (input){
                   var password = passKey.currentState.value;
