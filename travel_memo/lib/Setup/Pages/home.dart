@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gender_selector/gender_selector.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class Home extends StatefulWidget {
 
@@ -63,6 +65,17 @@ class _HomeState extends State<Home> {
                         validator:(input) => input.trim().isEmpty ? "Please enter valid name" : null,
                         onSaved: (input) => _lastName = input,
                       ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 10.0,
+                      ),
+                      child: GenderSelector(
+                        onChanged: (gender){
+                          print(gender);
+                        },
+                      )
                     ),
 
                     SizedBox(height: 20.0,),
