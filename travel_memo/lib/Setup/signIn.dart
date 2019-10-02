@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'Pages/home.dart';
 import 'signUp.dart';
 import 'package:flutter/material.dart';
 
@@ -30,8 +31,10 @@ class _LoginPageState extends State<LoginPage> {
   void validateandSubmit() async {
     if(validateandSave()){
       try{
-      AuthResult user = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email,password: _password)) ;
+      AuthResult result = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email,password: _password)) ;
+      FirebaseUser user = result.user;
       print('Signed in : ${user}');
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home(user: user)));
       }
       catch (e){
       print('Error: {$e}');

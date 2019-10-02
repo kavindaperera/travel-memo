@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 
+import 'Pages/home.dart';
+
 class SignUpPage extends StatefulWidget {
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -27,8 +29,10 @@ class _SignUpPageState extends State<SignUpPage> {
   void createAnAccount() async{
     if(validateandSave()){
       try{
-      AuthResult user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email,password: _password)) ;
+      AuthResult result = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email,password: _password)) ;
+      FirebaseUser user = result.user;
       print('Created Account as : ${user}');
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home(user: user)));
       }
       catch (e){
       print('Error: {$e}');
