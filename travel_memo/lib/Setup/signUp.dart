@@ -72,7 +72,7 @@ class _SignUpPageState extends State<SignUpPage> {
               child: new Text("Close"),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+                //Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
                 ///Navigator.pop(context);
                 /////////////////////////////////////////
                 ///navigate to the home screen ******

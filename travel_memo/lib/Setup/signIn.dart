@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                         vertical: 2.0,
                       ),
               child: FlatButton(
-                child: Text('Don\'t have an Account? Sign Up ',textScaleFactor: 1.3),
+                child: Text('Don\'t have an Account?\nSign Up ',textScaleFactor: 1.3,textAlign: TextAlign.center,),
                 onPressed:(){
                   Navigator.push(
                         context,
