@@ -62,13 +62,15 @@ class _LoginPageState extends State<LoginPage> {
       FirebaseUser user = result.user;
       print('Signed in : ${user}');
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home(user: user)));
+      _controllerEmail.clear();
+      _controllerPass.clear();
       }
       catch (e){
         _showDialog("Invalid","Your Email/Password is incorrect");
         _controllerEmail.clear();
         _controllerPass.clear();
-      print('Error: {$e}');
-    }
+        print('Error: {$e}');
+      }
     }
     
   }
@@ -93,12 +95,12 @@ class _LoginPageState extends State<LoginPage> {
         margin: EdgeInsets.all(15),
         padding: EdgeInsets.only(top: 16),
         alignment: Alignment.center,
+        child: new Form(
           key: formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-                   
+            children: <Widget>[                   
               Text(
                   'TravelMemo',
                   style: new TextStyle(
@@ -173,10 +175,11 @@ class _LoginPageState extends State<LoginPage> {
                         context,
                         MaterialPageRoute(builder: (context) => SignUpPage()),
                     );
-                } 
-              )
+                  } 
+                )
               ),
-          ],
+            ],
+          ),
         ),
       ),
     ),
