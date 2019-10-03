@@ -1,8 +1,9 @@
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'Pages/home.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:travel_memo/Setup/LoginPages/signIn.dart';
+import 'package:travel_memo/Setup/Pages/home.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  
   String _email, _password ,_passwordConfirm;
   final  formKey = GlobalKey<FormState>();
   TextEditingController _controllerEmail = new TextEditingController();
@@ -45,7 +47,10 @@ class _SignUpPageState extends State<SignUpPage> {
               child: new Text("Continue"),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Home(user: user)));
+               Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => Home(user:user)),
+                  );
+                //Navigator.push(context, MaterialPageRoute(builder: (context) => Home(user: user)));
                 ///Navigator.pop(context);
                 /////////////////////////////////////////
                 ///navigate to the home screen ******
@@ -214,9 +219,14 @@ class _SignUpPageState extends State<SignUpPage> {
 
               ),
                 FlatButton(
-                  child: Text('Already have an Account? Sign In',textScaleFactor: 1.3),
+                  child: Text('Already have an Account? Sign In',textScaleFactor: 1.15),
                   onPressed:(){
-                    Navigator.pop(context);
+                    _controllerEmail.clear();
+                    _controllerPass.clear();
+                    _controllerConfPass.clear();  
+                    Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
                     }
                   )
                 ],

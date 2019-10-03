@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gender_selector/gender_selector.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:travel_memo/Setup/Pages/userForm.dart';
-import 'package:travel_memo/Setup/signIn.dart';
+import 'package:travel_memo/Setup/Loginpages/signIn.dart';
 import 'constants.dart';
 import 'package:flutter_mobile_carousel/carousel.dart';
 import 'package:flutter_mobile_carousel/carousel_arrow.dart';
@@ -118,7 +118,7 @@ class _HomeState extends State<Home> {
       );
     }
     else if (choice == Constants.Logout) {
-      Navigator.push(
+      Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => LoginPage()),
       );
     }

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'Pages/home.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:travel_memo/Setup/Pages/home.dart';
 import 'signUp.dart';
 import 'package:flutter/material.dart';
 
@@ -63,7 +64,9 @@ class _LoginPageState extends State<LoginPage> {
           password: _password.toString().trim())) ;
       FirebaseUser user = result.user;
       print('Signed in : ${user}');
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Home(user:user)),
+      );
       _controllerEmail.clear();
       _controllerPass.clear();
       }
@@ -171,37 +174,14 @@ class _LoginPageState extends State<LoginPage> {
                           vertical: 2.0,
                         ),
                 child: FlatButton(
-                  child: Text('Don\'t have an Account? Sign Up ',textScaleFactor: 1.3,),
+                  child: Text('Don\'t have an Account? Sign Up ',textScaleFactor: 1.15,),
                   onPressed:(){
-                    Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SignUpPage()),
-                      );
+                    Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child:SignUpPage()));
                     }
                   )
                 ),
-<<<<<<< HEAD
-              ),
-              Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 2.0,
-                      ),
-              child: FlatButton(
-                child: Text('Don\'t have an Account?\nSign Up ',textScaleFactor: 1.3,textAlign: TextAlign.center,),
-                onPressed:(){
-                  Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),
-                    );
-                  } 
-                )
-              ),
-            ],
-=======
               ],
             ),
->>>>>>> c025d519694a44dedc4a55abb076226f6413b54b
           ),
         ),
       ),
