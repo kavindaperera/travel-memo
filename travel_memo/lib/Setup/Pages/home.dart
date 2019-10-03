@@ -7,10 +7,7 @@ import 'package:travel_memo/Setup/Pages/userForm.dart';
 import 'package:travel_memo/Setup/Loginpages/signIn.dart';
 import 'package:travel_memo/Start.dart';
 import 'constants.dart';
-import 'package:flutter_mobile_carousel/carousel.dart';
-import 'package:flutter_mobile_carousel/carousel_arrow.dart';
-import 'package:flutter_mobile_carousel/default_carousel_item.dart';
-import 'package:flutter_mobile_carousel/types.dart';
+import 'package:carousel_pro/carousel_pro.dart';
 
 class Home extends StatefulWidget {
 
@@ -124,37 +121,29 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Column(
-          children: <Widget>[
-            new Carousel(
-                rowCount: 3,
-                children: [
-                  'Item 1',
-                  'Item 2',
-                  'Item 3',
-                  'Item 4',
-                  'Item 5',
-                  'Item 6',
-                ].map((String itemText) {
-                  return DefaultCarouselItem(itemText);
-                }).toList()
-            ),
-            new Container(
-              padding: EdgeInsets.only(top: 25),
-              child: new Row(
-                children: <Widget>[
-                  Expanded (
-                      child: leftSection),
-                  Expanded (
-                      child: middleSection),
-                  Expanded (
-                      child: rightSection)
-                ],
-              ),
-            ),
-          ],
+      body: Center(
+        child: SizedBox(
+          height: 150.0,
+          width: 300.0,
+          child: Carousel(
+            boxFit: BoxFit.cover,
+            autoplay: false,
+            animationCurve: Curves.fastOutSlowIn,
+            animationDuration: Duration(milliseconds: 1000),
+            dotSize: 6.0,
+            dotIncreasedColor: Color(0xFFFF335C),
+            dotBgColor: Colors.transparent,
+            dotPosition: DotPosition.bottomCenter,
+            dotVerticalPadding: 10.0,
+            showIndicator: true,
+            indicatorBgPadding: 7.0,
+            images: [
+              NetworkImage('https://static.thousandwonders.net/Sri.Lanka.original.3463.jpg'),
+              NetworkImage('https://i.pinimg.com/originals/f8/2c/28/f82c289b884966192493cad018b0f186.jpg'),
+              NetworkImage('https://s1.1zoom.me/b5050/527/Sri_Lanka_Fields_Nuwara_Eliya_Trees_513491_1920x1080.jpg'),
+              NetworkImage('http://dfizz.com/dfizz/public/uploads/banner1-i2cdjbanner1-05giibeautiful-resort-sri-lanka-wallpapers-1920x1080.jpg'),
+            ],
+          ),
         ),
       ),
     );
