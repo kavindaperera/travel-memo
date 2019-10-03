@@ -126,99 +126,101 @@ class _SignUpPageState extends State<SignUpPage> {
           alignment: Alignment.center,
           child: new Form(
             key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-              Text(
-                  'Sign Up',
-                  style: new TextStyle(
-                      fontFamily:'Billabong',
-                      fontSize: 60.0)
-              ),
-              Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 15.0,
-                      ),
-              child : TextFormField(
-                controller: _controllerEmail,
-                validator: (input){
-                  if(input.isEmpty){
-                    return 'Please type an email';
-                  }
-                  if(!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(input)){
-                    return "Invalid Email";
-                  }
-                } ,
-                onSaved:(input) => _email = input,
-                decoration: InputDecoration(
-                  labelText: 'Enter Your Email',
-                  border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                Text(
+                    'Sign Up',
+                    style: new TextStyle(
+                        fontFamily:'Billabong',
+                        fontSize: 60.0)
+                ),
+                Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30.0,
+                          vertical: 15.0,
+                        ),
+                child : TextFormField(
+                  controller: _controllerEmail,
+                  validator: (input){
+                    if(input.isEmpty){
+                      return 'Please type an email';
+                    }
+                    if(!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(input)){
+                      return "Invalid Email";
+                    }
+                  } ,
+                  onSaved:(input) => _email = input,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Your Email',
+                    border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
+                    ),
                   ),
                 ),
+                Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30.0,
+                          vertical: 10.0,
+                        ),
+                  child: TextFormField(
+                  controller: _controllerPass,
+                  key: passKey,
+                  validator: (input){
+                    if(input.length < 6){
+                      return 'Please provide a password with atleast 6 characters';
+                    }
+                  } ,
+                  onSaved:(input) => _password= input,
+                  decoration: InputDecoration(
+                    border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
+                    labelText: 'Enter Your Password'
+                  ),
+                  obscureText: true,
+                  ),
+                ),
+                Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30.0,
+                          vertical: 15.0,
+                        ),
+                  child: TextFormField(
+                  controller: _controllerConfPass,
+                  onSaved:(input) => _passwordConfirm= input,
+                  validator: (input){
+                    var password = passKey.currentState.value;
+                    return (input == password) ? null : "Confirm Password does not match with password";
+                  } ,
+
+                  decoration: InputDecoration(
+                    border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
+                    labelText: 'Confirm Password'
+                  ),
+                  obscureText: true,
+                  ),
+                ),
+
+                OutlineButton(
+                  //onPressed: ,
+                  child: Text('Sign Up',textScaleFactor: 1.5,),
+                  borderSide: BorderSide(color: Colors.black,width: 3),
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                  textColor: Colors.black,
+                  onPressed:createAnAccount,
+
               ),
-              Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 10.0,
-                      ),
-                child: TextFormField(
-                controller: _controllerPass,
-                key: passKey,
-                validator: (input){
-                  if(input.length < 6){
-                    return 'Please provide a password with atleast 6 characters';
-                  }
-                } ,
-                onSaved:(input) => _password= input,
-                decoration: InputDecoration(
-                  border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
-                  labelText: 'Enter Your Password'
-                ),
-                obscureText: true,
-                ),
+                FlatButton(
+                  child: Text('Already have an Account? Sign In',textScaleFactor: 1.3),
+                  onPressed:(){
+                    Navigator.pop(context);
+                    }
+                  )
+                ],
               ),
-              Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 15.0,
-                      ),
-                child: TextFormField(
-                controller: _controllerConfPass,
-                onSaved:(input) => _passwordConfirm= input,
-                validator: (input){
-                  var password = passKey.currentState.value;
-                  return (input == password) ? null : "Confirm Password does not match with password";
-                } ,
-                
-                decoration: InputDecoration(
-                  border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
-                  labelText: 'Confirm Password'
-                ),
-                obscureText: true,
-                ),
-              ),
-              
-              OutlineButton(  
-                //onPressed: ,
-                child: Text('Sign Up',textScaleFactor: 1.5,),
-                borderSide: BorderSide(color: Colors.black,width: 3),
-                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
-                textColor: Colors.black,
-                onPressed:createAnAccount,
-                
-            ),
-              FlatButton(
-                child: Text('Already have an Account? Sign In',textScaleFactor: 1.3),
-                onPressed:(){
-                  Navigator.pop(context);
-                  } 
-                )
-              ],
             ),
           ),
         ),
