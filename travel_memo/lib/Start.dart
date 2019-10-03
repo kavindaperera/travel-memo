@@ -3,6 +3,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:travel_memo/Setup/LoginPages/signIn.dart' as prefix0;
 import 'package:travel_memo/Setup/Loginpages/signIn.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class StartPage extends StatefulWidget {
   @override
@@ -47,14 +48,31 @@ class _startPageState extends State<StartPage> {
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                          'TravelMemo',
-                          style: new TextStyle(
-                            color: Colors.black87,
-                            fontFamily:'Billabong',
-                            fontSize: 70.0)
-                      ),
+                       ColorizeAnimatedTextKit(
+                           duration: Duration(milliseconds: 4000),
+                            onTap: () {
+                              print("Tap Event");
+                            },
+                            text: [
+                              'TravelMemo',
+                            ],
+                            textStyle: TextStyle(
+                                color: Colors.black87,
+                                fontFamily: 'Billabong',
+                                fontSize: 70.0
+                            ),
+                            colors: [
+                              Colors.red,
+                              Colors.purple,
+                              Colors.blue,
+                            ],
+                            textAlign: TextAlign.start,
+                            alignment: AlignmentDirectional
+                                .topStart // or Alignment.topLeft
+                        ),
+
                     ],
                   ),
                 ),

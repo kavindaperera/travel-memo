@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gender_selector/gender_selector.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:travel_memo/Setup/Pages/userForm.dart';
 import 'package:travel_memo/Setup/Loginpages/signIn.dart';
+import 'package:travel_memo/Start.dart';
 import 'constants.dart';
 import 'package:flutter_mobile_carousel/carousel.dart';
 import 'package:flutter_mobile_carousel/carousel_arrow.dart';
@@ -30,16 +32,23 @@ class _HomeState extends State<Home> {
     print("current user: " + user.uid);
     return (user.uid);
   }
+  String getStringId() {
+    getId().then((s) {
+      print (s);
+      return(s);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     getId();
+    getStringId();
     return new Scaffold(
       appBar: new AppBar(
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.pin_drop),
+              icon: const Icon(Icons.menu),
               onPressed: () { Scaffold.of(context).openDrawer(); },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             );
@@ -51,12 +60,12 @@ class _HomeState extends State<Home> {
                 fontFamily:'Billabong',
                 fontSize: 25.0,),
         ),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         actions: <Widget>[
           new IconButton(icon: new Icon(Icons.search),
             onPressed: (){},
           ),
-          PopupMenuButton<String>(
+          /*PopupMenuButton<String>(
             onSelected: choiceAction,
             itemBuilder: (BuildContext context) {
               return Constants.choices.map((String choice) {
@@ -66,8 +75,54 @@ class _HomeState extends State<Home> {
                 );
               }).toList();
             },
-          )
+          )*/
         ],
+      ),
+      drawer: new Drawer(
+        child: ListView(
+          children: <Widget>[
+            new UserAccountsDrawerHeader(
+              accountName: Text('Username'),
+              accountEmail: Text('user@travelmemo.com'),
+              currentAccountPicture: GestureDetector(
+                child: new CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.person, color: Colors.black,),
+                ) ,
+              ) ,
+              decoration: new BoxDecoration(
+                color: Colors.blue
+              ),
+            ),
+            InkWell(
+              onTap: (){
+                Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child:Home(user: null)));
+              },
+              child: ListTile(
+                title: Text('Home'),
+                leading: Icon(Icons.home),
+              ),
+            ),
+            InkWell(
+              onTap: (){
+                Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child:UserForm()));
+              },
+              child: ListTile(
+                title: Text('Edit Profile'),
+                leading: Icon(Icons.person),
+              ),
+            ),
+            InkWell(
+              onTap: (){
+                Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child:StartPage()));
+              },
+              child: ListTile(
+                title: Text('Log Out'),
+                leading: Icon(Icons.settings_backup_restore),
+              ),
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -105,7 +160,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void choiceAction(String choice) {
+  /*void choiceAction(String choice) {
     print('Working');
     if (choice == Constants.Settings) {
       Navigator.push(
@@ -119,10 +174,10 @@ class _HomeState extends State<Home> {
     }
     else if (choice == Constants.Logout) {
       Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginPage()),
+        context, MaterialPageRoute(builder: (context) => StartPage()),
       );
     }
-  }
+  }*/
 
 
   final middleSection = new Container(
@@ -134,7 +189,7 @@ class _HomeState extends State<Home> {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Image.network(
-            'https://picsum.photos/250?image=9',
+            'https://lonelyplanetimages.imgix.net/mastheads/GettyImages-550859245_full.jpg?sharp=10&vib=20&w=1200',
           ),
         ),
       ],
