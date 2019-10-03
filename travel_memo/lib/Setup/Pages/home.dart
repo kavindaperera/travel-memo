@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gender_selector/gender_selector.dart';
@@ -22,8 +23,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-
+  String _firstName,_lastName,email;
+  final databaseReference = Firestore.instance;
   Future<String> getId() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     print("current user: " + user.uid);
@@ -35,11 +36,36 @@ class _HomeState extends State<Home> {
       return(s);
     });
   }
+  void getData(){  
+    
+      getId().then((s) async {
+      print("User ID string:");
+      print (s);
+      var user = await FirebaseAuth.instance.currentUser();
+      var userQuery = Firestore.instance.collection('profiles').where('e-mail', isEqualTo: user.email);
+      email = user.email;
+      userQuery.getDocuments().then((data){ 
+          if (data.documents.length > 0){
+              setState(() {
+                    _firstName = data.documents[1].data['firstName'];
+                    _lastName = data.documents[1].data['secondName'];
+                  });
+          }
 
+      print(_firstName);
+      print(_lastName);
+      print(user.email);
+    });
+    return(s);
+    
+      },
+      );
+  }
   @override
   Widget build(BuildContext context) {
     getId();
-    getStringId();
+    //getStringId();
+    getData();
     return new Scaffold(
       appBar: new AppBar(
         leading: Builder(
@@ -80,7 +106,7 @@ class _HomeState extends State<Home> {
           children: <Widget>[
             new UserAccountsDrawerHeader(
               accountName: Text('Username'),
-              accountEmail: Text('user@travelmemo.com'),
+              accountEmail: Text('${email}'),
               currentAccountPicture: GestureDetector(
                 child: new CircleAvatar(
                   backgroundColor: Colors.white,
@@ -93,7 +119,8 @@ class _HomeState extends State<Home> {
             ),
             InkWell(
               onTap: (){
-                Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child:Home(user: null)));
+                Navigator.of(context).pop();
+                Home(user:null);
               },
               child: ListTile(
                 title: Text('Home'),
@@ -102,7 +129,10 @@ class _HomeState extends State<Home> {
             ),
             InkWell(
               onTap: (){
-                Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child:UserForm()));
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => UserForm()),
+                );
               },
               child: ListTile(
                 title: Text('Edit Profile'),
@@ -111,7 +141,9 @@ class _HomeState extends State<Home> {
             ),
             InkWell(
               onTap: (){
-                Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child:StartPage()));
+                Navigator.of(context).pop();
+                //avigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child:StartPage()));
+                StartPage();
               },
               child: ListTile(
                 title: Text('Log Out'),
@@ -221,3 +253,9 @@ class _HomeState extends State<Home> {
     ),
   );
 }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return null;
+  }

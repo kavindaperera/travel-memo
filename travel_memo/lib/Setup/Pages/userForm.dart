@@ -1,24 +1,51 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gender_selector/gender_selector.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:travel_memo/Setup/Pages/home.dart';
 
 class UserForm extends StatefulWidget {
+  const UserForm({
+    Key key,
+    @required this.user
+  }) : super(key: key);
+  final FirebaseUser user;
+
   @override
   _UserFormState createState() => _UserFormState();
 }
 final _formKey = GlobalKey<FormState>();
 String _firstName, _lastName;
+String gender_forSave;
 
-_save(){
-  if (_formKey.currentState.validate()){
-    _formKey.currentState.save();
-    print(_firstName);
-    print(_lastName);
-  }
+bool validateandSave(){
+    final form = _formKey.currentState;
+    if(form.validate()){
+      print('Form is valid');
+      form.save();
+      return true;
+    }
+    else{
+      print('Form is invalid');
+      
+      return false;
+    }
 }
 
+
 class _UserFormState extends State<UserForm> {
+    
+  Future<String> getId() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    print("current user: " + user.uid);
+    return (user.uid);
+  }
+  String getStringId() {
+    
+  }
+
+  final databaseReference = Firestore.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +94,11 @@ class _UserFormState extends State<UserForm> {
                         ),
                         child: GenderSelector(
                           onChanged: (gender){
+                            if(gender==Gender.MALE){
+                                gender_forSave = "male";
+                            }else{
+                              gender_forSave="female";
+                            }                            
                             print(gender);
                           },
                         )
@@ -76,7 +108,7 @@ class _UserFormState extends State<UserForm> {
                     Container(
                       width: 250.0,
                       child: FlatButton(
-                          onPressed: _save,
+                          onPressed: save,
                           color: Colors.blue,
                           padding: EdgeInsets.all(10.0),
                           child: Text('Save',
@@ -95,4 +127,53 @@ class _UserFormState extends State<UserForm> {
       ),
     );
   }
+
+
+
+void save(){  
+  if (validateandSave()){
+    getId().then((s) async {
+    print("User ID string:");
+      print (s);
+      await databaseReference.collection("profiles")
+        .document(s)
+        .setData({
+          'firstName': _firstName,
+          'secondName': _lastName,
+          'gender' : gender_forSave
+        });
+      return(s);
+    });
+    _showDialog("","Successfully Updated");
+    print(_firstName);
+    print(_lastName);
+  }
 }
+void _showDialog(String messageTitle,String message) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text(messageTitle),
+          content: new Text(message),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => Home(user:null)),
+                );
+              },
+            ),
+            
+          ],
+        );
+      },
+    );
+  }
+}
+
