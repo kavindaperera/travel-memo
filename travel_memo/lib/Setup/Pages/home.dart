@@ -5,6 +5,10 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:travel_memo/Setup/Pages/userForm.dart';
 import 'package:travel_memo/Setup/signIn.dart';
 import 'constants.dart';
+import 'package:flutter_mobile_carousel/carousel.dart';
+import 'package:flutter_mobile_carousel/carousel_arrow.dart';
+import 'package:flutter_mobile_carousel/default_carousel_item.dart';
+import 'package:flutter_mobile_carousel/types.dart';
 
 class Home extends StatefulWidget {
 
@@ -67,18 +71,35 @@ class _HomeState extends State<Home> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
-        child: new Container(
-          padding: EdgeInsets.only(top: 25),
-          child: new Row(
-            children: <Widget>[
-              Expanded (
-                  child: leftSection),
-              Expanded (
-                  child: middleSection),
-              Expanded (
-                  child: rightSection)
-            ],
-          ),
+        child: Column(
+          children: <Widget>[
+            new Carousel(
+                rowCount: 3,
+                children: [
+                  'Item 1',
+                  'Item 2',
+                  'Item 3',
+                  'Item 4',
+                  'Item 5',
+                  'Item 6',
+                ].map((String itemText) {
+                  return DefaultCarouselItem(itemText);
+                }).toList()
+            ),
+            new Container(
+              padding: EdgeInsets.only(top: 25),
+              child: new Row(
+                children: <Widget>[
+                  Expanded (
+                      child: leftSection),
+                  Expanded (
+                      child: middleSection),
+                  Expanded (
+                      child: rightSection)
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -112,11 +133,8 @@ class _HomeState extends State<Home> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text(
-            'TravelMemo',
-            style: new TextStyle(
-              fontFamily:'Billabong',
-              fontSize: 25.0,),
+          child: Image.network(
+            'https://picsum.photos/250?image=9',
           ),
         ),
       ],
