@@ -81,7 +81,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      
       body: new Container(
         decoration: new BoxDecoration(
           image: new DecorationImage(
@@ -99,88 +98,90 @@ class _LoginPageState extends State<LoginPage> {
         alignment: Alignment.center,
         child: new Form(
           key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[                   
-              Text(
-                  'TravelMemo',
-                  style: new TextStyle(
-                      fontFamily:'Billabong',
-                      fontSize: 60.0)
-              ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                    'TravelMemo',
+                    style: new TextStyle(
+                        fontFamily:'Billabong',
+                        fontSize: 60.0)
+                ),
+                 Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30.0,
+                          vertical: 15.0,
+                        ),
+                child: TextFormField(
+                  controller: _controllerEmail,
+                  validator: (input){
+                    if(input.isEmpty){
+                      return 'Please type an email';
+                    }
+                  } ,
+                  onSaved:(input) => _email = input,
+                  decoration: InputDecoration(
+                    border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
+                    labelText: 'Email'
+                  ),
+                ),
+                 ),
                Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 15.0,
-                      ),
-              child: TextFormField(
-                controller: _controllerEmail,
-                validator: (input){
-                  if(input.isEmpty){
-                    return 'Please type an email';
-                  }
-                } ,
-                onSaved:(input) => _email = input,
-                decoration: InputDecoration(
-                  border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
-                  labelText: 'Email'
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30.0,
+                          vertical: 10.0,
+                        ),
+                child: TextFormField(
+
+                  controller: _controllerPass,
+                  validator: (input){
+                    if(input.length < 6){
+                      return 'Please provide a password with atleast 6 characters';
+                    }
+                  } ,
+                  onSaved:(input) => _password= input,
+                  decoration: InputDecoration(
+                    border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
+                      labelText: 'Password'
+                  ),
+                  obscureText: true,
                 ),
-              ),
                ),
-             Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 10.0,
-                      ),
-              child: TextFormField(
-                
-                controller: _controllerPass,
-                validator: (input){
-                  if(input.length < 6){
-                    return 'Please provide a password with atleast 6 characters';
-                  }
-                } ,
-                onSaved:(input) => _password= input,
-                decoration: InputDecoration(
-                  border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
-                    labelText: 'Password'
+                Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30.0,
+                          vertical: 2.0,
+                        ),
+                child : OutlineButton(
+                  onPressed: validateandSubmit,
+                  child: Text('Sign In',textScaleFactor: 1.5,),
+                  borderSide: BorderSide(color: Colors.black,width: 3),
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                  textColor: Colors.black,
+                  color: Colors.lightBlue[50],
+                  ),
                 ),
-                obscureText: true,
-              ),
-             ),
-              Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 2.0,
-                      ),
-              child : OutlineButton(
-                onPressed: validateandSubmit,
-                child: Text('Sign In',textScaleFactor: 1.5,),
-                borderSide: BorderSide(color: Colors.black,width: 3),
-                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
-                textColor: Colors.black,
-                color: Colors.lightBlue[50],
+                Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30.0,
+                          vertical: 2.0,
+                        ),
+                child: FlatButton(
+                  child: Text('Don\'t have an Account? Sign Up ',textScaleFactor: 1.3,),
+                  onPressed:(){
+                    Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignUpPage()),
+                      );
+                    }
+                  )
                 ),
-              ),
-              Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 2.0,
-                      ),
-              child: FlatButton(
-                child: Text('Don\'t have an Account? Sign Up ',textScaleFactor: 1.3),
-                onPressed:(){
-                  Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),
-                    );
-                  } 
-                )
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -82,6 +82,7 @@ final middleSection = new Container(
         ],
       ),
     );
+
 final rightSection = new Container(
   child: new Column(
           //mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -106,6 +107,7 @@ final rightSection = new Container(
           ],          
         ),
     );
+
 final leftSection = new Container(
 
   child: new Column(
