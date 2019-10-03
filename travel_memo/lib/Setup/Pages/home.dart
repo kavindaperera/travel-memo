@@ -23,31 +23,21 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(
-            'TravelMemo',
-            style: new TextStyle(
-                fontFamily:'Billabong',
-                fontSize: 50.0)
-        ),
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: choiceAction,
-            itemBuilder: (BuildContext context) {
-              return Constants.choices.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-          )
-        ],
+      body: new Container(
+        //alignment: Alignment.center,
+        padding: EdgeInsets.only(top: 27),
+        child: new Row(
+          children: <Widget>[
+            leftSection,
+            middleSection,
+            rightSection
+            ],
+          ),         
       ),
     );
   }
-
-  void choiceAction(String choice){
+}
+  void choiceAction(String choice,BuildContext context){
     print('Working');
     if (choice == Constants.Settings){
       print('Settings');
@@ -61,5 +51,70 @@ class _HomeState extends State<Home> {
       );
     }
   }
-}
 
+final middleSection = new Container(
+  //alignment: Alignment.center,
+  child: new Column(
+          //mainAxisAlignment: MainAxisAlignment.center,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 37.0,
+                        vertical: 15.0,
+                      ),
+            child:Text(
+            'TravelMemo',
+            style: new TextStyle(
+                fontFamily:'Billabong',
+                fontSize: 30.0),
+            ),
+          ),
+        ],
+      ),
+    );
+final rightSection = new Container(
+  child: new Column(
+          //mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 31.0,
+                        vertical: 10.0,
+                      ),
+            child: PopupMenuButton<String>(
+            //onSelected: choiceAction,
+            itemBuilder: (BuildContext context) {
+              return Constants.choices.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                    );
+                  }).toList();
+                },
+              ),
+            ),
+          ],          
+        ),
+    );
+final leftSection = new Container(
+
+  child: new Column(
+          //mainAxisAlignment: MainAxisAlignment.center,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40.0,
+                        vertical: 15.0,
+                      ),
+              child:Text(
+                'icon',
+                style: new TextStyle(
+                  fontFamily:'Billabong',
+                  fontSize: 30.0),
+            ),
+          ),
+        ],
+      ),
+    );

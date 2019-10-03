@@ -10,12 +10,12 @@ class LoginPage extends StatefulWidget {
 }
 
 
-
 class _LoginPageState extends State<LoginPage> {
   String _email, _password;
   final  formKey = GlobalKey<FormState>();
   TextEditingController _controllerEmail = new TextEditingController();
   TextEditingController _controllerPass = new TextEditingController();
+
   void _showDialog(String messageTitle,String message) {
     // flutter defined function
     showDialog(
@@ -62,30 +62,57 @@ class _LoginPageState extends State<LoginPage> {
       FirebaseUser user = result.user;
       print('Signed in : ${user}');
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home(user: user)));
+      _controllerEmail.clear();
+      _controllerPass.clear();
       }
       catch (e){
         _showDialog("Invalid","Your Email/Password is incorrect");
         _controllerEmail.clear();
         _controllerPass.clear();
-      print('Error: {$e}');
-    }
+        print('Error: {$e}');
+      }
     }
     
   }
   
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sign in'),
-      ),
+      
       body: new Container(
-        padding: EdgeInsets.all(16.0),
+        decoration: new BoxDecoration(
+          image: new DecorationImage(
+            image: new AssetImage("assets/images/new.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        margin: EdgeInsets.all(2),
+        padding: EdgeInsets.only(top: 16),
+        //padding: EdgeInsets.all(16.0),
+
+        child: new Container(
+        margin: EdgeInsets.all(15),
+        padding: EdgeInsets.only(top: 16),
+        alignment: Alignment.center,
         child: new Form(
           key: formKey,
           child: Column(
-            children: <Widget>[
-              new TextFormField(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[                   
+              Text(
+                  'TravelMemo',
+                  style: new TextStyle(
+                      fontFamily:'Billabong',
+                      fontSize: 60.0)
+              ),
+               Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 15.0,
+                      ),
+              child: TextFormField(
                 controller: _controllerEmail,
                 validator: (input){
                   if(input.isEmpty){
@@ -94,10 +121,19 @@ class _LoginPageState extends State<LoginPage> {
                 } ,
                 onSaved:(input) => _email = input,
                 decoration: InputDecoration(
+                  border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
                   labelText: 'Email'
                 ),
               ),
-              new TextFormField(
+               ),
+             Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 10.0,
+                      ),
+              child: TextFormField(
+                
                 controller: _controllerPass,
                 validator: (input){
                   if(input.length < 6){
@@ -106,31 +142,48 @@ class _LoginPageState extends State<LoginPage> {
                 } ,
                 onSaved:(input) => _password= input,
                 decoration: InputDecoration(
+                  border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
                     labelText: 'Password'
                 ),
                 obscureText: true,
               ),
-              RaisedButton(
+             ),
+              Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 2.0,
+                      ),
+              child : OutlineButton(
                 onPressed: validateandSubmit,
-                child: Text('Sign In'),
-            ),
-              FlatButton(
-                child: Text('Create an Account'),
+                child: Text('Sign In',textScaleFactor: 1.5,),
+                borderSide: BorderSide(color: Colors.black,width: 3),
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                textColor: Colors.black,
+                color: Colors.lightBlue[50],
+                ),
+              ),
+              Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 2.0,
+                      ),
+              child: FlatButton(
+                child: Text('Don\'t have an Account? Sign Up ',textScaleFactor: 1.3),
                 onPressed:(){
                   Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => SignUpPage()),
                     );
-                } 
-              )
-          ],
+                  } 
+                )
+              ),
+            ],
+          ),
         ),
       ),
     ),
   );
   }
 
-  List<Widget> buildInputs(){
-
-  }
 }
