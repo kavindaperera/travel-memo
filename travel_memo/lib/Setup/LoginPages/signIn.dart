@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
           password: _password.toString().trim())) ;
       FirebaseUser user = result.user;
       print('Signed in : ${user}');
-      Navigator.pushReplacement(
+      Navigator.push(
         context, MaterialPageRoute(builder: (context) => Home(user:user)),
       );
       _controllerEmail.clear();

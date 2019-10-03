@@ -6,6 +6,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:travel_memo/Setup/Pages/userForm.dart';
 import 'package:travel_memo/Setup/Loginpages/signIn.dart';
+import 'package:travel_memo/Setup/Pages/userForm.dart' as prefix0;
 import 'package:travel_memo/Start.dart';
 import 'constants.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -42,25 +43,30 @@ class _HomeState extends State<Home> {
       print("User ID string:");
       print (s);
       var user = await FirebaseAuth.instance.currentUser();
-      var userQuery = Firestore.instance.collection('profiles').where('e-mail', isEqualTo: user.email);
+      //var userQuery = Firestore.instance.collection('profiles').where('e-mail', isEqualTo: user.email);
+      databaseReference
+        .collection("profiles")
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      snapshot.documents.forEach((f) {
+        if(f.documentID==s){
+          _firstName =  "${f.data.values.elementAt(0)}";
+          _lastName = "${f.data.values.elementAt(2)}";
+          gender_forSave = "${f.data.values.elementAt(1)}";
+          print(_firstName);
+          print(_lastName);
+          print(gender_forSave);
+        }
+        return print('${f.data}}');});
+    });    
       email = user.email;
-      userQuery.getDocuments().then((data){ 
-          if (data.documents.length > 0){
-              setState(() {
-                    _firstName = data.documents[1].data['firstName'];
-                    _lastName = data.documents[1].data['secondName'];
-                  });
-          }
-
-      print(_firstName);
-      print(_lastName);
       print(user.email);
+      return(s);
     });
-    return(s);
     
-      },
-      );
-  }
+    
+      }
+ 
   @override
   Widget build(BuildContext context) {
     getId();
@@ -105,8 +111,8 @@ class _HomeState extends State<Home> {
         child: ListView(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-              accountName: Text('Username'),
-              accountEmail: Text('${email}'),
+              accountName: Text(_firstName+_lastName),
+              accountEmail: Text(email),
               currentAccountPicture: GestureDetector(
                 child: new CircleAvatar(
                   backgroundColor: Colors.white,
@@ -120,7 +126,7 @@ class _HomeState extends State<Home> {
             InkWell(
               onTap: (){
                 Navigator.of(context).pop();
-                Home(user:null);
+                Home(user:user);
               },
               child: ListTile(
                 title: Text('Home'),
@@ -130,7 +136,7 @@ class _HomeState extends State<Home> {
             InkWell(
               onTap: (){
                 Navigator.of(context).pop();
-                Navigator.pushReplacement(
+                Navigator.push(
                 context, MaterialPageRoute(builder: (context) => UserForm()),
                 );
               },
@@ -143,7 +149,9 @@ class _HomeState extends State<Home> {
               onTap: (){
                 Navigator.of(context).pop();
                 //avigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child:StartPage()));
-                StartPage();
+                Navigator.push(
+                context, MaterialPageRoute(builder: (context) => StartPage()),
+                );
               },
               child: ListTile(
                 title: Text('Log Out'),
@@ -254,8 +262,4 @@ class _HomeState extends State<Home> {
   );
 }
 
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
-  }
+  

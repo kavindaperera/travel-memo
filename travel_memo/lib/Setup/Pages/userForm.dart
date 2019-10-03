@@ -18,7 +18,7 @@ class UserForm extends StatefulWidget {
 final _formKey = GlobalKey<FormState>();
 String _firstName, _lastName;
 String gender_forSave;
-
+FirebaseUser user;
 bool validateandSave(){
     final form = _formKey.currentState;
     if(form.validate()){
@@ -37,7 +37,7 @@ bool validateandSave(){
 class _UserFormState extends State<UserForm> {
     
   Future<String> getId() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+     user = await FirebaseAuth.instance.currentUser();
     print("current user: " + user.uid);
     return (user.uid);
   }
@@ -164,9 +164,9 @@ void _showDialog(String messageTitle,String message) {
               child: new Text("Close"),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Home(user:null)),
-                );
+                /*Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Home(user:user)),
+                );*/
               },
             ),
             
