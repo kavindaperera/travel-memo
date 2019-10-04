@@ -24,10 +24,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String _firstName,_lastName,email;
+  String _firstName = "user",_lastName = "name" ,email;
   final databaseReference = Firestore.instance;
+
   Future<String> getId() async {
+
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
     print("current user: " + user.uid);
     return (user.uid);
   }
@@ -43,16 +46,17 @@ class _HomeState extends State<Home> {
       print("User ID string:");
       print (s);
       var user = await FirebaseAuth.instance.currentUser();
-      //var userQuery = Firestore.instance.collection('profiles').where('e-mail', isEqualTo: user.email);
+      //var userQuery = Firestore.instance.collection('profiles').document(s);
       databaseReference
         .collection("profiles")
         .getDocuments()
         .then((QuerySnapshot snapshot) {
       snapshot.documents.forEach((f) {
         if(f.documentID==s){
-          _firstName =  "${f.data.values.elementAt(0)}";
-          _lastName = "${f.data.values.elementAt(2)}";
-          gender_forSave = "${f.data.values.elementAt(1)}";
+          print('DATA CHECK');
+          _lastName =  "${f.data.values.elementAt(0)}";
+          gender_forSave= "${f.data.values.elementAt(2)}";
+          _firstName = "${f.data.values.elementAt(1)}";
           print(_firstName);
           print(_lastName);
           print(gender_forSave);
@@ -71,7 +75,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     getId();
     //getStringId();
+    print('getId()');
+
     getData();
+    print('getData()');
+
     return new Scaffold(
       appBar: new AppBar(
         leading: Builder(
@@ -111,8 +119,8 @@ class _HomeState extends State<Home> {
         child: ListView(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-              accountName: Text(_firstName+_lastName),
-              accountEmail: Text(email),
+              accountName: Text(_firstName + " " + _lastName??'default value'),
+              accountEmail: Text(email??'default value'),
               currentAccountPicture: GestureDetector(
                 child: new CircleAvatar(
                   backgroundColor: Colors.white,
