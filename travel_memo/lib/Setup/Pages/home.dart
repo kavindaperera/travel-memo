@@ -24,7 +24,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String _firstName = "user",_lastName = "name" ,email;
+  String _firstName = "user",_lastName = "name" ,email ,_url="http://turboclinic.co.za/wp-content/uploads/2014/02/facebook-avatar.jpg" ;
   final databaseReference = Firestore.instance;
 
   Future<String> getId() async {
@@ -40,8 +40,7 @@ class _HomeState extends State<Home> {
       return(s);
     });
   }
-  void getData(){  
-    
+  void getData(){
       getId().then((s) async {
       print("User ID string:");
       print (s);
@@ -57,11 +56,13 @@ class _HomeState extends State<Home> {
           _lastName =  "${f.data.values.elementAt(0)}";
           gender_forSave= "${f.data.values.elementAt(2)}";
           _firstName = "${f.data.values.elementAt(1)}";
+          _url = "${f.data.values.elementAt(3)}";
           print(_firstName);
           print(_lastName);
           print(gender_forSave);
+          print(_url);
         }
-        return print('${f.data}}');});
+        return print('USER_DATA '+ "=> "+'${f.data}}');});
     });    
       email = user.email;
       print(user.email);
@@ -123,9 +124,21 @@ class _HomeState extends State<Home> {
               accountEmail: Text(email??'default value'),
               currentAccountPicture: GestureDetector(
                 child: new CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.person, color: Colors.black,),
-                ) ,
+                  radius: 100,
+                  backgroundColor: Color(0xff476cfb),
+                  child: ClipOval(
+                    child: SizedBox(
+                      width: 180.0,
+                      height: 180.0,
+                      child:FittedBox(
+                        child: Image.network(
+                          _url,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ) ,
               decoration: new BoxDecoration(
                 color: Colors.blue

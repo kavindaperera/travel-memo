@@ -1,9 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:gender_selector/gender_selector.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:travel_memo/Setup/Pages/home.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as Path;
+
 
 class UserForm extends StatefulWidget {
   const UserForm({
@@ -16,8 +23,10 @@ class UserForm extends StatefulWidget {
   _UserFormState createState() => _UserFormState();
 }
 final _formKey = GlobalKey<FormState>();
+
 String _firstName, _lastName;
 String gender_forSave;
+String _url;
 FirebaseUser user;
 bool validateandSave(){
     final form = _formKey.currentState;
@@ -45,9 +54,36 @@ class _UserFormState extends State<UserForm> {
     
   }
 
+  File _profilePicture;
+
+
   final databaseReference = Firestore.instance;
   @override
   Widget build(BuildContext context) {
+
+    Future getImage() async{
+      var profilePicture = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+      setState(() {
+        _profilePicture = profilePicture;
+        print('Image Path $_profilePicture');
+      });
+    }
+    Future uploadPic(BuildContext context) async{
+      String fileName = Path.basename(user.uid);
+      StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
+      StorageUploadTask uploadTask = firebaseStorageRef.putFile(_profilePicture);
+      var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+      _url = dowurl.toString();
+
+      StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
+      setState(() {
+        print("Profile Picture uploaded : " + _url);
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
+      });
+    }
+
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -55,6 +91,9 @@ class _UserFormState extends State<UserForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              SizedBox(
+                height: 20.0,
+              ),
               Text(
                   'TravelMemo',
                   style: new TextStyle(
@@ -65,6 +104,44 @@ class _UserFormState extends State<UserForm> {
                 key: _formKey,
                 child: Column(mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.center,
+                          child: CircleAvatar(
+                            radius: 100,
+                            backgroundColor: Color(0xff476cfb),
+                            child: ClipOval(
+                              child: SizedBox(
+                                width: 180.0,
+                                height: 180.0,
+                                child:FittedBox(
+                                  child: (_profilePicture!=null)?Image.file(_profilePicture, fit: BoxFit.fill)
+                                  :Image.network(
+                                    "http://turboclinic.co.za/wp-content/uploads/2014/02/facebook-avatar.jpg",
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 60.0),
+                          child: IconButton(
+                              icon: const Icon(
+                                  Icons.camera_alt
+                              ),
+                            onPressed: (){
+                                getImage();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 30.0,
@@ -107,7 +184,7 @@ class _UserFormState extends State<UserForm> {
                     SizedBox(height: 20.0,),
                     Container(
                       width: 250.0,
-                      child: FlatButton(
+                      child: /*FlatButton(
                           onPressed: save,
                           color: Colors.blue,
                           padding: EdgeInsets.all(10.0),
@@ -117,7 +194,24 @@ class _UserFormState extends State<UserForm> {
                               fontSize: 18.0,
                             ),
                           )
+                      ),*/
+                      RaisedButton(
+                        color: Color(0xff476cfb),
+                        onPressed: () {
+                          uploadPic(context);
+                          save();
+                        },
+
+                        elevation: 4.0,
+                        splashColor: Colors.blueGrey,
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(color: Colors.white, fontSize: 16.0),
+                        ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
                     ),
                   ],),
               ),
@@ -132,6 +226,7 @@ class _UserFormState extends State<UserForm> {
 
 void save(){  
   if (validateandSave()){
+
     getId().then((s) async {
     print("User ID string:");
       print (s);
@@ -140,7 +235,8 @@ void save(){
         .setData({
           'firstName': _firstName,
           'secondName': _lastName,
-          'gender' : gender_forSave
+          'gender' : gender_forSave,
+          'url' : _url??'default value',
         });
       return(s);
     });
