@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1035305724074:android:be92e92db66a9ac89108d3",
+        "mobilesdk_app_id": "1:1035305724074:android:93f0b3a1a95d1bcd9108d3",
         "android_client_info": {
           "package_name": "com.example.travel_memo"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1035305724074-rfm7kh6rdn1nmdfgv4u65e9vt8f6eov6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.travel_memo",
+            "certificate_hash": "955745a89b70c96663a3e7442b5326e42bb757a1"
+          }
+        },
         {
           "client_id": "1035305724074-kghocoto0mqmssr8qeat3obp3lq6hgio.apps.googleusercontent.com",
           "client_type": 3

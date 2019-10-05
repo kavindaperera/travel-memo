@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:math';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:travel_memo/Setup/LoginPages/signIn.dart';
 import 'package:travel_memo/Setup/Pages/home.dart';
 
@@ -11,7 +13,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  
+  int _state = 0;  
   String _email, _password ,_passwordConfirm;
   final  formKey = GlobalKey<FormState>();
   TextEditingController _controllerEmail = new TextEditingController();
@@ -95,6 +97,9 @@ class _SignUpPageState extends State<SignUpPage> {
       AuthResult result = (await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email,password: _password)) ;
       FirebaseUser user = result.user;
       print('Created Account as : ${user}');
+      setState(() {
+        _state = 0;
+      });
       _showDialogSuccessful("Successful","You have Successfully Registered!",user);  
       _controllerEmail.clear();
       _controllerPass.clear();
@@ -102,14 +107,17 @@ class _SignUpPageState extends State<SignUpPage> {
       } catch (e){
       _controllerPass.clear();
       _controllerConfPass.clear();
-        
-        _showDialogError("Error","Email already exist!");  
+        setState(() {
+        _state = 0;
+      });
+        _showDialogError("Error","Account already exist");  
         print('Error: {$e}');
       
     }
     }
   }
-//show messages when done
+  
+
 
 
   @override
@@ -136,12 +144,30 @@ class _SignUpPageState extends State<SignUpPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                Text(
-                    'Sign Up',
-                    style: new TextStyle(
-                        fontFamily:'Billabong',
-                        fontSize: 60.0)
-                ),
+                ColorizeAnimatedTextKit(
+                           duration: Duration(milliseconds: 5000),
+                           isRepeatingAnimation: false,
+                            onTap: () {
+                              print("Tap Event");
+                            },
+                            text: [
+                              ' Sign Up',
+                            ],
+                            textStyle: TextStyle(
+                                color: Colors.black87,
+                                fontFamily: 'Billabong',
+                                fontSize: 65.0
+                            ),
+                            colors: [
+                              Colors.red,
+                              Colors.purple,
+                              Colors.blue,
+                          
+                            ],
+                            //textAlign: TextAlign.start,
+                            //alignment: AlignmentDirectional
+                                //.topStart // or Alignment.topLeft
+                        ),
                 Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 30.0,
@@ -151,14 +177,22 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: _controllerEmail,
                   validator: (input){
                     if(input.isEmpty){
+                      setState(() {
+                          _state = 0;
+                      });
                       return 'Please type an email';
                     }
                     if(!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(input)){
+                      setState(() {
+                          _state = 0;
+                      });
                       return "Invalid Email";
                     }
                   } ,
                   onSaved:(input) => _email = input,
                   decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white30,
                     labelText: 'Enter Your Email',
                     border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
                     contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
@@ -175,6 +209,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   key: passKey,
                   validator: (input){
                     if(input.length < 6){
+                      setState(() {
+                         _state = 0;
+                      });
                       return 'Please provide a password with atleast 6 characters';
                     }
                   } ,
@@ -182,7 +219,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   decoration: InputDecoration(
                     border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
                     contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
-                    labelText: 'Enter Your Password'
+                    labelText: 'Enter Your Password',
+                    filled: true,
+                    fillColor: Colors.white30,
                   ),
                   obscureText: true,
                   ),
@@ -197,10 +236,15 @@ class _SignUpPageState extends State<SignUpPage> {
                   onSaved:(input) => _passwordConfirm= input,
                   validator: (input){
                     var password = passKey.currentState.value;
+                    setState(() {
+                      _state = 0;
+                    });
                     return (input == password) ? null : "Confirm Password does not match with password";
                   } ,
 
                   decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white30,
                     border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(25.0)),
                     contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
                     labelText: 'Confirm Password'
@@ -209,22 +253,34 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
 
-                OutlineButton(
+                MaterialButton(
                   //onPressed: ,
-                  child: Text('Sign Up',textScaleFactor: 1.5,),
-                  borderSide: BorderSide(color: Colors.black,width: 3),
-                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                  //child: Text('Sign Up',textScaleFactor: 1.5,),
+                  //borderSide: BorderSide(color: Colors.black,width: 3),
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                   textColor: Colors.black,
-                  onPressed:createAnAccount,
-
-              ),
+                  child :setUpButtonChild(),
+                  onPressed: () {
+                  setState(() {
+                    if (_state == 0) {
+                      animateButton();
+                    }
+                    
+                  });
+                },
+                elevation: 4.0,
+                minWidth: 150.0,
+                height: 48.0,
+                color: Colors.black,
+                ),
+                 
                 FlatButton(
                   child: Text('Already have an Account? Sign In',textScaleFactor: 1.15),
                   onPressed:(){
                     _controllerEmail.clear();
                     _controllerPass.clear();
                     _controllerConfPass.clear();  
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context, MaterialPageRoute(builder: (context) => LoginPage()),
                       );
                     }
@@ -237,7 +293,40 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
+Widget setUpButtonChild() {
+    if (_state == 0) {
+      return new Text(
+        "Sign Up",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16.0,
+        ),
+      );
+    } else if (_state == 1) {
+      return CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      );
+    } else {
+      return new Text(
+        "Sign Up",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16.0,
+        ),
+      );
+    }
+  }
 
+  void animateButton() {
+    setState(() {
+      _state = 1;
+    });
+
+    Timer(Duration(milliseconds: 1000), () {
+      createAnAccount();
+    });
+    
+  }
 
 }
 

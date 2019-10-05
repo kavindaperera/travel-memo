@@ -51,12 +51,12 @@ class _startPageState extends State<StartPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                        ColorizeAnimatedTextKit(
-                           duration: Duration(milliseconds: 4000),
+                           duration: Duration(milliseconds: 3000),
                             onTap: () {
                               print("Tap Event");
                             },
                             text: [
-                              'TravelMemo',
+                              ' TravelMemo',
                             ],
                             textStyle: TextStyle(
                                 color: Colors.black87,

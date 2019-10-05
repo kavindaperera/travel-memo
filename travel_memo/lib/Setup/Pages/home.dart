@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gender_selector/gender_selector.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:travel_memo/Setup/Pages/userForm.dart';
 import 'package:travel_memo/Setup/Loginpages/signIn.dart';
@@ -62,7 +63,7 @@ class _HomeState extends State<Home> {
           print(gender_forSave);
           print(_url);
         }
-        return print('USER_DATA '+ "=> "+'${f.data}}');});
+        return ;});
     });    
       email = user.email;
       print(user.email);
@@ -169,9 +170,11 @@ class _HomeState extends State<Home> {
             InkWell(
               onTap: (){
                 Navigator.of(context).pop();
+                signOut();
                 //avigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child:StartPage()));
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                 context, MaterialPageRoute(builder: (context) => StartPage()),
+                ModalRoute.withName('/'),
                 );
               },
               child: ListTile(
@@ -281,6 +284,22 @@ class _HomeState extends State<Home> {
       ],
     ),
   );
+
+ Future<void> signOut() async {
+   GoogleSignIn _googleSignIn = GoogleSignIn();
+   try{
+    //create an instance you your firebase auth.
+    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+    _googleSignIn.signOut();
+    //return this future to the place you called it.
+    return await FirebaseAuth.instance.signOut();{
+      print("SignOut Done");
+    }
+   }
+    catch(error) {
+      print("error in signout $error");
+    }
+  }
 }
 
   
