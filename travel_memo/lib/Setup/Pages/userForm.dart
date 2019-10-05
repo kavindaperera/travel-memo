@@ -26,18 +26,54 @@ final _formKey = GlobalKey<FormState>();
 int _state = 0;
 String _firstName, _lastName;
 String gender_forSave = 'Rather not mention';
-String _url = null;
+String _url = "http://turboclinic.co.za/wp-content/uploads/2014/02/facebook-avatar.jpg";
 FirebaseUser user;
-
+enum ConfirmAction { CANCEL, ACCEPT }
 
 
 class _UserFormState extends State<UserForm> {
-    
+
+
   Future<String> getId() async {
      user = await FirebaseAuth.instance.currentUser();
     print("current user: " + user.uid);
     return (user.uid);
   }
+
+  Future<ConfirmAction> _asyncConfirmDialog(BuildContext context) async {
+    Timer(Duration(milliseconds: 2000), () {
+
+
+
+    return showDialog<ConfirmAction>(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Make Profile Picture?'),
+          //content: const Text(
+              //'This will reset your device to its default factory settings.'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop(ConfirmAction.CANCEL);
+              },
+            ),
+            FlatButton(
+              child: const Text('ACCEPT'),
+              onPressed: () {
+                uploadPic(context);
+                Navigator.of(context).pop(ConfirmAction.ACCEPT);
+              },
+            )
+          ],
+        );
+      },
+    );
+    });
+  }
+
   String getStringId() {
     
   }
@@ -98,7 +134,7 @@ class _UserFormState extends State<UserForm> {
                                 child:FittedBox(
                                   child: (_profilePicture!=null)?Image.file(_profilePicture, fit: BoxFit.fill)
                                   :Image.network(
-                                    "http://turboclinic.co.za/wp-content/uploads/2014/02/facebook-avatar.jpg",
+                                    _url,
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -113,11 +149,26 @@ class _UserFormState extends State<UserForm> {
                               ),
                             onPressed: (){
                                 getImage();
+                                _asyncConfirmDialog(context);
+
                             },
                           ),
                         ),
                       ],
                     ),
+                    /*MaterialButton(
+                      color: Colors.grey[400],
+                      onPressed: (){
+                        uploadPic(context);
+                      },
+                      child: Text(
+                        'Upload',
+                        style: TextStyle(
+                          fontSize: 10.0,
+                          color: Colors.white
+                        ),
+                      ),
+                    ),*/
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 30.0,
@@ -283,7 +334,6 @@ class _UserFormState extends State<UserForm> {
 
 void save(){  
   if (validateandSave()){
-    uploadPic(context);
     getId().then((s) async {
     print("User ID string:");
       print (s);
