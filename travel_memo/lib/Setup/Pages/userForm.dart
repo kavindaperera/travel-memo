@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,24 +23,12 @@ class UserForm extends StatefulWidget {
   _UserFormState createState() => _UserFormState();
 }
 final _formKey = GlobalKey<FormState>();
-
+int _state = 0;
 String _firstName, _lastName;
-String gender_forSave;
-String _url;
+String gender_forSave = 'Rather not mention';
+String _url = null;
 FirebaseUser user;
-bool validateandSave(){
-    final form = _formKey.currentState;
-    if(form.validate()){
-      print('Form is valid');
-      form.save();
-      return true;
-    }
-    else{
-      print('Form is invalid');
-      
-      return false;
-    }
-}
+
 
 
 class _UserFormState extends State<UserForm> {
@@ -69,19 +57,7 @@ class _UserFormState extends State<UserForm> {
         print('Image Path $_profilePicture');
       });
     }
-    Future uploadPic(BuildContext context) async{
-      String fileName = Path.basename(user.uid);
-      StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
-      StorageUploadTask uploadTask = firebaseStorageRef.putFile(_profilePicture);
-      var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      _url = dowurl.toString();
 
-      StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
-      setState(() {
-        print("Profile Picture uploaded : " + _url);
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
-      });
-    }
 
 
     return Scaffold(
@@ -114,7 +90,7 @@ class _UserFormState extends State<UserForm> {
                           alignment: Alignment.center,
                           child: CircleAvatar(
                             radius: 100,
-                            backgroundColor: Color(0xff476cfb),
+                            backgroundColor: Color(0xFF000000),
                             child: ClipOval(
                               child: SizedBox(
                                 width: 180.0,
@@ -149,7 +125,14 @@ class _UserFormState extends State<UserForm> {
                       ),
                       child: TextFormField(
                         decoration: InputDecoration(labelText: 'First Name'),
-                        validator:(input) => input.trim().isEmpty ? "Please enter valid name" : null,
+                        validator:(input){
+                          if(input.trim().isEmpty){
+                            setState(() {
+                              _state = 0;
+                            });
+                            return "Please enter valid name";
+                          }
+                        },
                         onSaved: (input) => _firstName = input,
                       ),
                     ),
@@ -160,7 +143,14 @@ class _UserFormState extends State<UserForm> {
                       ),
                       child: TextFormField(
                         decoration: InputDecoration(labelText: 'Last Name'),
-                        validator:(input) => input.trim().isEmpty ? "Please enter valid name" : null,
+                        validator:(input){
+                      if(input.trim().isEmpty){
+                      setState(() {
+                      _state = 0;
+                      });
+                      return "Please enter valid name";
+                      }
+                      },
                         onSaved: (input) => _lastName = input,
                       ),
                     ),
@@ -174,10 +164,11 @@ class _UserFormState extends State<UserForm> {
                             if(gender==Gender.MALE){
                                 gender_forSave = "male";
                             }else{
-                              gender_forSave="female";
+                                gender_forSave="female";
                             }                            
                             print(gender);
                           },
+
                         )
                     ),
 
@@ -195,7 +186,7 @@ class _UserFormState extends State<UserForm> {
                             ),
                           )
                       ),*/
-                      RaisedButton(
+                      /*RaisedButton(
                         color: Color(0xff476cfb),
                         onPressed: () {
                           uploadPic(context);
@@ -208,6 +199,25 @@ class _UserFormState extends State<UserForm> {
                           'Submit',
                           style: TextStyle(color: Colors.white, fontSize: 16.0),
                         ),
+                      ),*/
+                      MaterialButton(
+                        //onPressed: ,
+                        //child: Text('Sign Up',textScaleFactor: 1.5,),
+                        //borderSide: BorderSide(color: Colors.black,width: 3),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                        textColor: Colors.black,
+                        child :setUpButtonChild(),
+                        onPressed: () {
+                          setState(() {
+                            if (_state == 0) {
+                              animateButton();
+                            }
+                          });
+                        },
+                        elevation: 4.0,
+                        minWidth: 150.0,
+                        height: 48.0,
+                        color: Colors.black,
                       ),
                     ),
                     SizedBox(
@@ -221,12 +231,59 @@ class _UserFormState extends State<UserForm> {
       ),
     );
   }
+  Widget setUpButtonChild() {
+    if (_state == 0) {
+      return new Text(
+        "Submit",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16.0,
+        ),
+      );
+    } else if (_state == 1) {
+      return CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      );
+    } else {
+      return new Text(
+        "Submit",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16.0,
+        ),
+      );
+    }
+  }
 
+  void animateButton() {
+    setState(() {
+      _state = 1;
+    });
+    Timer(Duration(milliseconds: 1000), () {
 
+      save();
+    });
+
+  }
+
+  Future uploadPic(BuildContext context) async{
+    String fileName = Path.basename(user.uid);
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(
+        fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_profilePicture);
+    var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    _url = dowurl.toString();
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    setState(() {
+      print("Profile Picture uploaded : " + _url);
+      Scaffold.of(context).showSnackBar(
+          SnackBar(content: Text('Profile Picture Uploaded')));
+    });
+  }
 
 void save(){  
   if (validateandSave()){
-
+    uploadPic(context);
     getId().then((s) async {
     print("User ID string:");
       print (s);
@@ -243,8 +300,24 @@ void save(){
     _showDialog("","Successfully Updated");
     print(_firstName);
     print(_lastName);
+    setState(() {
+      _state = 0;
+    });
   }
 }
+  bool validateandSave(){
+    final form = _formKey.currentState;
+    if(form.validate()){
+      print('Form is valid');
+      form.save();
+      return true;
+    }
+    else{
+      print('Form is invalid');
+      return false;
+    }
+  }
+
 void _showDialog(String messageTitle,String message) {
     // flutter defined function
     showDialog(

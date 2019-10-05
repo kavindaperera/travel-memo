@@ -84,6 +84,7 @@ class _HomeState extends State<Home> {
 
     return new Scaffold(
       appBar: new AppBar(
+        backgroundColor: Color(0xFF000000),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -124,9 +125,12 @@ class _HomeState extends State<Home> {
               accountName: Text(_firstName + " " + _lastName??'default value'),
               accountEmail: Text(email??'default value'),
               currentAccountPicture: GestureDetector(
+                onTap: () {
+                  print ('Avatar');
+                },
                 child: new CircleAvatar(
                   radius: 100,
-                  backgroundColor: Color(0xff476cfb),
+                  backgroundColor: Color(0xFFFFFFFF),
                   child: ClipOval(
                     child: SizedBox(
                       width: 180.0,
@@ -142,7 +146,7 @@ class _HomeState extends State<Home> {
                 ),
               ) ,
               decoration: new BoxDecoration(
-                color: Colors.blue
+                color: Colors.black
               ),
             ),
             InkWell(
@@ -202,7 +206,7 @@ class _HomeState extends State<Home> {
             showIndicator: true,
             indicatorBgPadding: 7.0,
             images: [
-              NetworkImage('https://static.thousandwonders.net/Sri.Lanka.original.3463.jpg'),
+              NetworkImage('https://thesoutheastern.com/wp-content/uploads/2018/08/underconstruction-900x472.jpg'),
               NetworkImage('https://i.pinimg.com/originals/f8/2c/28/f82c289b884966192493cad018b0f186.jpg'),
               NetworkImage('https://s1.1zoom.me/b5050/527/Sri_Lanka_Fields_Nuwara_Eliya_Trees_513491_1920x1080.jpg'),
               NetworkImage('http://dfizz.com/dfizz/public/uploads/banner1-i2cdjbanner1-05giibeautiful-resort-sri-lanka-wallpapers-1920x1080.jpg'),
