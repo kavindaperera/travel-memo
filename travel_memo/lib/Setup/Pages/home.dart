@@ -53,10 +53,10 @@ Future<String> getId() async {
       snapshot.documents.forEach((f) {
         if(f.documentID==s){
           print('DATA CHECK');
-          _lastName =  "${f.data.values.elementAt(3)}";
+          _lastName =  "${f.data.values.elementAt(0)}";
           gender_forSave= "${f.data.values.elementAt(2)}";
-          _firstName = "${f.data.values.elementAt(0)}";
-          _url = "${f.data.values.elementAt(1)}";
+          _firstName = "${f.data.values.elementAt(1)}";
+          _url = "${f.data.values.elementAt(3)}";
           print(_firstName);
           print(_lastName);
           print(gender_forSave);

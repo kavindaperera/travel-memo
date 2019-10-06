@@ -26,7 +26,7 @@ final _formKey = GlobalKey<FormState>();
 int _state = 0;
 String _firstName, _lastName;
 String gender_forSave = 'Rather not mention';
-String _url = "http://turboclinic.co.za/wp-content/uploads/2014/02/facebook-avatar.jpg";
+String _url = " ";
 FirebaseUser user;
 enum ConfirmAction { CANCEL, ACCEPT }
 
