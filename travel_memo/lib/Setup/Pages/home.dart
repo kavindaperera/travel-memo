@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,8 @@ import 'package:gender_selector/gender_selector.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:travel_memo/Setup/Pages/userForm.dart';
 import 'package:travel_memo/Setup/Loginpages/signIn.dart';
-import 'package:travel_memo/Setup/Pages/userForm.dart' as prefix0;
+import 'package:travel_memo/Setup/Pages/userForm.dart' ;
 import 'package:travel_memo/Start.dart';
 import 'constants.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -25,13 +26,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String _firstName = "user",_lastName = "name" ,email ,_url="http://turboclinic.co.za/wp-content/uploads/2014/02/facebook-avatar.jpg" ;
-  final databaseReference = Firestore.instance;
-
-  Future<String> getId() async {
-
+ 
+final databaseReference = Firestore.instance;
+ String _firstName = "user",_lastName = "name" ,email ,_url="http://turboclinic.co.za/wp-content/uploads/2014/02/facebook-avatar.jpg" ;
+Future<String> getId() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
     print("current user: " + user.uid);
     return (user.uid);
   }
@@ -54,10 +53,10 @@ class _HomeState extends State<Home> {
       snapshot.documents.forEach((f) {
         if(f.documentID==s){
           print('DATA CHECK');
-          _lastName =  "${f.data.values.elementAt(0)}";
+          _lastName =  "${f.data.values.elementAt(3)}";
           gender_forSave= "${f.data.values.elementAt(2)}";
-          _firstName = "${f.data.values.elementAt(1)}";
-          _url = "${f.data.values.elementAt(3)}";
+          _firstName = "${f.data.values.elementAt(0)}";
+          _url = "${f.data.values.elementAt(1)}";
           print(_firstName);
           print(_lastName);
           print(gender_forSave);
@@ -75,13 +74,27 @@ class _HomeState extends State<Home> {
  
   @override
   Widget build(BuildContext context) {
-    getId();
-    //getStringId();
-    print('getId()');
-
-    getData();
-    print('getData()');
-
+      int _stateRefresh=0;
+      Future.delayed(const Duration(seconds: 5), () {   
+        print("Refreshing every 5 Seconds------------------------");
+        getId();
+        //getStringId();
+        print('getId() every 5 seconds');
+        getData();
+        print('getData() every 5 seconds');      
+        setState(() {
+           _stateRefresh=1;
+           });             
+        });
+        if(_stateRefresh==1){
+            Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Home(user: user,)),
+              );
+              setState(() {
+                _stateRefresh=5;
+                });
+            }; 
+      
     return new Scaffold(
       appBar: new AppBar(
         backgroundColor: Color(0xFF000000),
@@ -152,7 +165,9 @@ class _HomeState extends State<Home> {
             InkWell(
               onTap: (){
                 Navigator.of(context).pop();
-                Home(user:user);
+                Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Home(user: user,)),
+                );
               },
               child: ListTile(
                 title: Text('Home'),

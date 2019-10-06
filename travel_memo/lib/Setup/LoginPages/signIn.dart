@@ -383,7 +383,7 @@ Widget setUpButtonChildGoogle() {
       _stateGoogle = 1;
     });
 
-    Timer(Duration(milliseconds: 1000), () {
+    Timer(Duration(milliseconds: 1500), () {
       googleSignin();
     });
     }
