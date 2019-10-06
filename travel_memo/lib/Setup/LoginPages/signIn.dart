@@ -122,7 +122,7 @@ Future<String> googleSignin() async {
     return 'signInWithGoogle succeeded: $user';
         }
         catch (e){
-          _showDialog("Error","Something went wrong\nPlease try Again");
+          //_showDialog("Error","Something went wrong\nPlease try Again");
           setState(() {
           _stateGoogle = 0;
         });

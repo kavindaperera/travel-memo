@@ -383,9 +383,9 @@ void _showDialog(String messageTitle,String message) {
               child: new Text("Close"),
               onPressed: () {
                 Navigator.of(context).pop();
-                /*Navigator.push(
+                Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Home(user:user)),
-                );*/
+                );
               },
             ),
             

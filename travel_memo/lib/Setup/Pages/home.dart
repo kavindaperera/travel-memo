@@ -75,13 +75,13 @@ Future<String> getId() async {
   @override
   Widget build(BuildContext context) {
       int _stateRefresh=0;
-      Future.delayed(const Duration(seconds: 5), () {   
-        print("Refreshing every 5 Seconds------------------------");
+      Future.delayed(const Duration(milliseconds: 500),() {   
+        print("Refreshing every 500 milliSeconds------------------------");
         getId();
         //getStringId();
-        print('getId() every 5 seconds');
+        print('getId() every 500 milliSeconds');
         getData();
-        print('getData() every 5 seconds');      
+        print('getData() every 500 milliSeconds');      
         setState(() {
            _stateRefresh=1;
            });             
