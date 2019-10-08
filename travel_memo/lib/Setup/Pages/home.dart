@@ -8,6 +8,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:travel_memo/Setup/Loginpages/signIn.dart';
+import 'package:travel_memo/Setup/NavigatePages/find.dart';
 import 'package:travel_memo/Setup/Pages/userForm.dart' ;
 import 'package:travel_memo/Start.dart';
 import 'constants.dart';
@@ -74,25 +75,27 @@ Future<String> getId() async {
  
   @override
   Widget build(BuildContext context) {
-      int _stateRefresh=0;
-      Future.delayed(const Duration(milliseconds: 500),() {   
+      int _stateRefresh=0,oneRefresh=0;
+      Future.delayed(const Duration(milliseconds: 5000),() {   
         print("Refreshing every 500 milliSeconds------------------------");
         getId();
         //getStringId();
         print('getId() every 500 milliSeconds');
         getData();
-        print('getData() every 500 milliSeconds');      
+        print('getData() every 500 milliSeconds');
+        oneRefresh = 1;      
         setState(() {
-           _stateRefresh=1;
+           _stateRefresh=1;           
            });             
         });
-        if(_stateRefresh==1){
+        if(_stateRefresh==1 && oneRefresh==1){
             Navigator.push(
               context, MaterialPageRoute(builder: (context) => Home(user: user,)),
               );
               setState(() {
                 _stateRefresh=5;
                 });
+                oneRefresh=5;
             }; 
       
     return new Scaffold(
@@ -130,6 +133,26 @@ Future<String> getId() async {
             },
           )*/
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),            
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            title: Text('Find'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.photo_album),
+            title: Text('Gallery'),
+          ),
+          
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
       ),
       drawer: new Drawer(
         child: ListView(
@@ -319,6 +342,45 @@ Future<String> getId() async {
       print("error in signout $error");
     }
   }
+
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text(
+      'Index 0: Home',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 1: Find',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 2: Gallery',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 3: Profile',
+      style: optionStyle,
+    ),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    if(_selectedIndex ==0){
+      Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Home(user: user,)),
+                );
+    }
+    else if(_selectedIndex==1){
+      Navigator.push(
+                context, MaterialPageRoute(builder: (context) => FindPage()),
+                );
+    }
+  }
 }
+
 
   

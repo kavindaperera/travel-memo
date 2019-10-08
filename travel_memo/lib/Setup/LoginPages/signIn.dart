@@ -251,7 +251,7 @@ Future<String> googleSignin() async {
                     });
                   },
                 elevation: 4.0,
-                minWidth: 150.0,
+                minWidth: 130.0,
                 height: 48.0,
                 color: Colors.black,
                   
