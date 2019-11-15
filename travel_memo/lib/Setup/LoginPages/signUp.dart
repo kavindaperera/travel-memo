@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:travel_memo/Setup/LoginPages/signIn.dart';
-import 'package:travel_memo/Setup/Pages/home.dart';
+import 'package:travel_memo/Setup/Pages/bottomDrawer.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -50,7 +49,7 @@ class _SignUpPageState extends State<SignUpPage> {
               onPressed: () {
                 Navigator.of(context).pop();
                Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Home(user:user)),
+                  context, MaterialPageRoute(builder: (context) => BottomDrawer(user:user)),
                   );
                 //Navigator.push(context, MaterialPageRoute(builder: (context) => Home(user: user)));
                 ///Navigator.pop(context);

@@ -4,6 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:travel_memo/Setup/Pages/bottomDrawer.dart';
 import 'package:travel_memo/Setup/Pages/home.dart';
 import 'signUp.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
       FirebaseUser user = result.user;
       print('Signed in : ${user}');
       Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Home(user:user)),
+        context, MaterialPageRoute(builder: (context) => BottomDrawer(user:user)),
       );
       setState(() {
         _state = 0;
@@ -116,7 +117,7 @@ Future<String> googleSignin() async {
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
     Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Home(user:user)),
+          context, MaterialPageRoute(builder: (context) => BottomDrawer(user:user)),
         );
         print('signInWithGoogle succeeded: $_email');
     return 'signInWithGoogle succeeded: $user';
