@@ -14,7 +14,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -56,6 +56,13 @@ flutter:
    - assets/images/new.png
    - assets/images/start.png
    - assets/images/google_logo.png
+   - assets/images/image1.jpg
+   - assets/images/image2.jpg
+   - assets/images/image3.jpg
+   - assets/images/image4.jpg
+   - assets/images/fav.png
+   - assets/images/navarrow.png
+   - assets/images/chatbubble.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

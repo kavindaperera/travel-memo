@@ -24,7 +24,7 @@ final _formKey = GlobalKey<FormState>();
 int _state = 0;
 String _firstName, _lastName;
 String gender_forSave = 'Rather not mention';
-String _url = " ";
+String _url = "";
 FirebaseUser user;
 enum ConfirmAction { CANCEL, ACCEPT }
 
@@ -40,9 +40,6 @@ class _UserFormState extends State<UserForm> {
 
   Future<ConfirmAction> _asyncConfirmDialog(BuildContext context) async {
     Timer(Duration(milliseconds: 2000), () {
-
-
-
     return showDialog<ConfirmAction>(
       context: context,
       barrierDismissible: false, // user must tap button for close dialog!
@@ -148,7 +145,6 @@ class _UserFormState extends State<UserForm> {
                             onPressed: (){
                                 getImage();
                                 _asyncConfirmDialog(context);
-
                             },
                           ),
                         ),

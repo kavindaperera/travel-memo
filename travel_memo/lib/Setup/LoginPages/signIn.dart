@@ -8,7 +8,7 @@ import 'package:travel_memo/Setup/Pages/bottomDrawer.dart';
 import 'package:travel_memo/Setup/Pages/home.dart';
 import 'signUp.dart';
 import 'package:flutter/material.dart';
-
+import 'package:travel_memo/Setup/Pages/diary.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();

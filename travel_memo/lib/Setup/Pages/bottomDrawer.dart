@@ -9,6 +9,7 @@ import 'package:travel_memo/Setup/NavigatePages/find.dart';
 import 'package:travel_memo/Setup/Pages/diary.dart';
 import 'package:travel_memo/Setup/Pages/home.dart';
 import 'package:travel_memo/Setup/Pages/userForm.dart' ;
+import 'package:travel_memo/Setup/Pages/userForm.dart' as prefix0;
 import 'package:travel_memo/Start.dart';
 
 
@@ -26,16 +27,25 @@ class BottomDrawer extends StatefulWidget {
 }
 
 class _BottomDrawerState extends State<BottomDrawer> {
+  var travelPlaces = List<Widget>();
+  @override
+  void initState(){
+    getId(); 
+    getData();    
+    super.initState();
+  }
    int _currentIndex  = 0;
     final _pageOptions = [
         Home(user:user),
         FindPage(),
-        Diary(),
+        Diary(user: user,),
         UserForm(user:user),
     ];
  
 final databaseReference = Firestore.instance;
  String _firstName = "user",_lastName = "name" ,email ,_url="http://turboclinic.co.za/wp-content/uploads/2014/02/facebook-avatar.jpg" ;
+ var _images;
+ var _keysList;
 Future<String> getId() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     print("current user: " + user.uid);
@@ -59,15 +69,17 @@ Future<String> getId() async {
         .then((QuerySnapshot snapshot) {
       snapshot.documents.forEach((f) {
         if(f.documentID==s){
-          print('DATA CHECK');
-          _lastName =  "${f.data.values.elementAt(3)}";
-          gender_forSave= "${f.data.values.elementAt(2)}";
-          _firstName = "${f.data.values.elementAt(0)}";
-          _url = "${f.data.values.elementAt(1)}";
+          _lastName =  f.data.values.elementAt(4).toString();
+          gender_forSave= f.data.values.elementAt(1).toString();
+          _firstName = f.data.values.elementAt(0).toString();
+          _url = f.data.values.elementAt(3).toString();
+          _images = f.data.values.elementAt(2);
+          _keysList = _images.keys.toList();
           print(_firstName);
           print(_lastName);
           print(gender_forSave);
           print(_url);
+          print(_keysList);
         }
         return ;});
     });    
@@ -79,10 +91,9 @@ Future<String> getId() async {
     
       }
  
+ 
   @override
-  Widget build(BuildContext context) {  
-    getData();
-    getId();  
+  Widget build(BuildContext context) {   
     return new Scaffold(
       appBar: new AppBar(
         backgroundColor: Color(0xFF000000),
@@ -125,27 +136,27 @@ Future<String> getId() async {
         onItemSelected: (index) => setState(() {
               _currentIndex = index;
               
-    }),
+          }),
         items:[
           BottomNavyBarItem(
             icon: Icon(Icons.home),
             title: Text('Home'),   
-            activeColor: Colors.red,         
+            activeColor: Colors.black,         
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.search),
             title: Text('Find'),
-            activeColor: Colors.purpleAccent
+            activeColor: Colors.black
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.book),
             title: Text('Diary'),
-            activeColor: Colors.green
+            activeColor: Colors.black
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.supervised_user_circle),
             title: Text('User'),
-            activeColor: Colors.blue
+            activeColor: Colors.black
           ),          
         ],
       ),
@@ -223,6 +234,8 @@ Future<String> getId() async {
         ),
       ),
     );
+
+    
   }
 
   /*void choiceAction(String choice) {
@@ -315,6 +328,3 @@ Future<String> getId() async {
 
  
 }
-
-
-  
